@@ -226,6 +226,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3016983427124563516}
+  - {fileID: 3016983427124563518}
   SimulationBehaviours: []
 --- !u!143 &3016983427124563517
 CharacterController:
@@ -277,7 +278,7 @@ MonoBehaviour:
   jumpImpulse: 8
   acceleration: 10
   braking: 10
-  maxSpeed: 2
+  maxSpeed: 15
   rotationSpeed: 15
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
@@ -293,3 +294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f5cf6094c12344cac3f5a31f57038d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  networkCharacterController: {fileID: 3016983427124563516}
+  speed: 15

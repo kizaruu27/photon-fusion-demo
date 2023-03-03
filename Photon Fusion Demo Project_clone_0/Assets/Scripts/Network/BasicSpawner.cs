@@ -76,17 +76,22 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         var data = new NetworkInputData();
 
-        if (Input.GetKey(KeyCode.W))
-            data.movementInput += Vector3.forward;
+        // if (Input.GetKey(KeyCode.W))
+        //     data.movementInput += Vector3.forward;
+        //
+        // if (Input.GetKey(KeyCode.S))
+        //     data.movementInput += Vector3.back;
+        //
+        // if (Input.GetKey(KeyCode.A))
+        //     data.movementInput += Vector3.left;
+        //
+        // if (Input.GetKey(KeyCode.D))
+        //     data.movementInput += Vector3.right;
 
-        if (Input.GetKey(KeyCode.S))
-            data.movementInput += Vector3.back;
+        float xInput = Input.GetAxis("Horizontal");
+        float zInput = Input.GetAxis("Vertical");
 
-        if (Input.GetKey(KeyCode.A))
-            data.movementInput += Vector3.left;
-
-        if (Input.GetKey(KeyCode.D))
-            data.movementInput += Vector3.right;
+        data.movementInput = new Vector3(xInput, 0, zInput);
         
         input.Set(data);
     }
