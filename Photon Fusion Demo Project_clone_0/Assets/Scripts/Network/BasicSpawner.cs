@@ -72,7 +72,24 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input) { }
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+        var data = new NetworkInputData();
+
+        if (Input.GetKey(KeyCode.W))
+            data.movementInput += Vector3.forward;
+
+        if (Input.GetKey(KeyCode.S))
+            data.movementInput += Vector3.back;
+
+        if (Input.GetKey(KeyCode.A))
+            data.movementInput += Vector3.left;
+
+        if (Input.GetKey(KeyCode.D))
+            data.movementInput += Vector3.right;
+        
+        input.Set(data);
+    }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
