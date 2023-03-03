@@ -6,7 +6,7 @@ using Fusion;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
-    [SerializeField] private GameObject objectTest;
+    [SerializeField] private Transform playerCamera;
     
     public static NetworkPlayer Local { get; set; }
 
@@ -18,7 +18,19 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public override void Spawned()
     {
         if (!Object.HasInputAuthority)
-            objectTest.SetActive(false);
+        {
+            playerCamera.gameObject.SetActive(false);
+        }
+        else
+        {
+            playerCamera.parent = null;
+            
+            Camera mainCamera = Camera.main;
+            mainCamera.enabled = false;
+
+            AudioListener audioListener = FindObjectOfType<AudioListener>();
+            audioListener.enabled = false;
+        }
     }
 
     public void PlayerLeft(PlayerRef player) { }

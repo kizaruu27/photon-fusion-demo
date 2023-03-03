@@ -1,18 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
+using Fusion;
 using UnityEngine;
 
 public class PlayerCameraHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        NetworkPlayer[] networkPlayer = FindObjectsOfType<NetworkPlayer>();
+
+        foreach (var player in networkPlayer)
+        {
+            if (player.Object.HasInputAuthority)
+                cinemachineVirtualCamera.Follow = player.transform;
+        }
     }
 }
