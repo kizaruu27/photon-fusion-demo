@@ -3,7 +3,8 @@ using Fusion;
 
 public enum InputButtons
 {
-    JUMP
+    JUMP,
+    FIRE
 }
 
 public struct NetworkInputData : INetworkInput

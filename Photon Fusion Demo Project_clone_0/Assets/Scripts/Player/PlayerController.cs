@@ -5,6 +5,7 @@ using Fusion;
 
 public class PlayerController : NetworkBehaviour
 {
+    [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private NetworkCharacterControllerPrototype networkCharacterController;
     [SerializeField] private float speed = 15f;
     
@@ -25,6 +26,11 @@ public class PlayerController : NetworkBehaviour
             
             if (pressed.IsSet(InputButtons.JUMP))
                 networkCharacterController.Jump();
+            
+            // fire
+            if (pressed.IsSet(InputButtons.FIRE))
+                Runner.Spawn(bulletPrefab, transform.position + transform.TransformDirection(Vector3.forward),
+                    Quaternion.LookRotation(transform.TransformDirection(Vector3.forward)), Object.InputAuthority);
         }
     }
 }

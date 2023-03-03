@@ -651,6 +651,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  bulletPrefab: {fileID: 6693149660136924782, guid: d818cdb2df4365944bb537a91ce5f091,
+    type: 3}
   networkCharacterController: {fileID: 3016983427124563516}
   speed: 15
 --- !u!114 &3747368613289951593

@@ -91,10 +91,15 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // move input
         float xInput = Input.GetAxis("Horizontal");
         float zInput = Input.GetAxis("Vertical");
-
         data.movementInput = new Vector3(xInput, 0, zInput);
+        
+        // jump input
         data.buttons.Set(InputButtons.JUMP, Input.GetKey(KeyCode.Space));
         
+        // fire input
+        data.buttons.Set(InputButtons.FIRE, Input.GetKey(KeyCode.Mouse0));
+        
+        // set the input data to network
         input.Set(data);
     }
 
