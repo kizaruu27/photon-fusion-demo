@@ -88,10 +88,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // if (Input.GetKey(KeyCode.D))
         //     data.movementInput += Vector3.right;
 
+        // move input
         float xInput = Input.GetAxis("Horizontal");
         float zInput = Input.GetAxis("Vertical");
 
         data.movementInput = new Vector3(xInput, 0, zInput);
+        data.buttons.Set(InputButtons.JUMP, Input.GetKey(KeyCode.Space));
         
         input.Set(data);
     }

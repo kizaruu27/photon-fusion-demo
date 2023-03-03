@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 3016983427124563517}
   - component: {fileID: 3016983427124563516}
   - component: {fileID: 3016983427124563518}
+  - component: {fileID: 3747368613289951593}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -200,6 +201,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3016983426414780982}
+  - {fileID: 7982869599521854366}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -227,6 +229,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3016983427124563516}
   - {fileID: 3016983427124563518}
+  - {fileID: 3747368613289951593}
   SimulationBehaviours: []
 --- !u!143 &3016983427124563517
 CharacterController:
@@ -297,3 +300,48 @@ MonoBehaviour:
   _interpolationDataSource: 0
   networkCharacterController: {fileID: 3016983427124563516}
   speed: 15
+--- !u!114 &3747368613289951593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3016983427124563905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df6596b7985ce84a947ef6131cb59af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  objectTest: {fileID: 3495730728390630497}
+--- !u!1 &3495730728390630497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7982869599521854366}
+  m_Layer: 0
+  m_Name: Test gameobject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7982869599521854366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3495730728390630497}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3016983427124563906}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
