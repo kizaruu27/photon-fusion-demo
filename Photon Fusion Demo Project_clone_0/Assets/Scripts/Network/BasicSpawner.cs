@@ -20,29 +20,41 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public MatchmakingMode mode;
-    
+
+    private void Awake()
+    {
+        NetworkRunner networkRunnerInScene = FindObjectOfType<NetworkRunner>();
+
+        if (networkRunner != null)
+            networkRunner = networkRunnerInScene;
+    }
+
     private void Start()
     {
-        switch (mode)
+        if (SceneManager.GetActiveScene().name != "MainMenu")
         {
-            case MatchmakingMode.AutoHostOrClient :
-                StartGame(GameMode.AutoHostOrClient);
-                break;
-            case MatchmakingMode.Shared :
-                StartGame(GameMode.Shared);
-                break;
+            switch (mode)
+            {
+                case MatchmakingMode.AutoHostOrClient :
+                    StartGame(GameMode.AutoHostOrClient, "Test Session", SceneManager.GetActiveScene().buildIndex);
+                    break;
+                case MatchmakingMode.Shared :
+                    StartGame(GameMode.Shared, "Test Session", SceneManager.GetActiveScene().buildIndex);
+                    break;
+            }
         }
     }
 
-    async void StartGame(GameMode mode)
+    async void StartGame(GameMode mode, string sessionName, int scene)
     {
         networkRunner.ProvideInput = true;
 
         await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
-            SessionName = "Room",
-            Scene = SceneManager.GetActiveScene().buildIndex,
+            SessionName = sessionName,
+            CustomLobbyName = "OurLobbyID",
+            Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
         
@@ -54,7 +66,37 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log("Shared Mode");
     }
 
+    async void JoinLobby()
+    {
+        Debug.Log("Join Lobby Started");
 
+        string lobbyID = "OurLobbyID";
+
+        var result = await networkRunner.JoinSessionLobby(SessionLobby.Custom, lobbyID);
+
+        if (!result.Ok)
+            Debug.Log($"Unable to join lobby {lobbyID}");
+        else 
+            Debug.Log("Join Lobby OK");
+    }
+
+    public void OnJoinLobby()
+    {
+        JoinLobby();
+    }
+
+    public void CreateGame(string sessionName, string sceneName)
+    {
+        Debug.Log($"Create session {sessionName} scene {sceneName} build Index {SceneUtility.GetBuildIndexByScenePath($"Scene/{sceneName}")}");
+        StartGame(GameMode.Host, sessionName, SceneUtility.GetBuildIndexByScenePath($"Scene/{sceneName}"));
+    }
+
+    public void JoinGame(SessionInfo sessionInfo)
+    {
+        Debug.Log($"Join session {sessionInfo.Name}");
+        StartGame(GameMode.Client, sessionInfo.Name, SceneManager.GetActiveScene().buildIndex);
+
+    }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
@@ -75,19 +117,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
-
-        // if (Input.GetKey(KeyCode.W))
-        //     data.movementInput += Vector3.forward;
-        //
-        // if (Input.GetKey(KeyCode.S))
-        //     data.movementInput += Vector3.back;
-        //
-        // if (Input.GetKey(KeyCode.A))
-        //     data.movementInput += Vector3.left;
-        //
-        // if (Input.GetKey(KeyCode.D))
-        //     data.movementInput += Vector3.right;
-
+        
         // move input
         float xInput = Input.GetAxis("Horizontal");
         float zInput = Input.GetAxis("Vertical");
