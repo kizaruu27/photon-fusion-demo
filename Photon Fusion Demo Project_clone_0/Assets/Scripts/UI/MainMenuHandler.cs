@@ -58,10 +58,17 @@ public class MainMenuHandler : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
-        BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
-        networkRunnerHandler.CreateGame(sessionNameInputField.text, "Gameplay");
-        
+        StartCoroutine(StartNewSession());
+    }
+
+    IEnumerator StartNewSession()
+    {
         HideAllPanels();
         statusPanel.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(3);
+
+        BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
+        networkRunnerHandler.CreateGame(sessionNameInputField.text, SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

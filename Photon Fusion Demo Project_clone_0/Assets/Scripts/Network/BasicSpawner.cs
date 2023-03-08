@@ -23,6 +23,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+        
         NetworkRunner networkRunnerInScene = FindObjectOfType<NetworkRunner>();
 
         if (networkRunner != null)
@@ -85,10 +87,10 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         JoinLobby();
     }
 
-    public void CreateGame(string sessionName, string sceneName)
+    public void CreateGame(string sessionName, int scene)
     {
-        Debug.Log($"Create session {sessionName} scene {sceneName} build Index {SceneUtility.GetBuildIndexByScenePath($"Scene/{sceneName}")}");
-        StartGame(GameMode.Host, sessionName, SceneUtility.GetBuildIndexByScenePath($"Scene/{sceneName}"));
+        // Debug.Log($"Create session {sessionName} scene {sceneName} build Index {SceneUtility.GetBuildIndexByScenePath($"Scene/{sceneName}")}");
+        StartGame(GameMode.Host, sessionName, scene);
     }
 
     public void JoinGame(SessionInfo sessionInfo)
