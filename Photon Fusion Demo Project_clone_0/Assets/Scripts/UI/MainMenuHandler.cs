@@ -22,8 +22,8 @@ public class MainMenuHandler : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("PlayerNickname"))
-            nicknameField.text = PlayerPrefs.GetString("PlayerNickname");
+        // if (PlayerPrefs.HasKey("PlayerNickname"))
+        //     nicknameField.text = PlayerPrefs.GetString("PlayerNickname");
     }
 
     public void OnFindGameClickede()
@@ -32,13 +32,14 @@ public class MainMenuHandler : MonoBehaviour
         PlayerPrefs.Save();
 
         // SceneManager.LoadScene("Gameplay");
-        
-        BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
-        networkRunnerHandler.OnJoinLobby();
-            
+
         HideAllPanels();
 
         sessionBrowserPanel.gameObject.SetActive(true);
+        FindObjectOfType<SessionListUIHandler>(true);
+        
+        BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
+        networkRunnerHandler.OnJoinLobby();
     }
     
     void HideAllPanels()
@@ -70,5 +71,11 @@ public class MainMenuHandler : MonoBehaviour
 
         BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
         networkRunnerHandler.CreateGame(sessionNameInputField.text, SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void OnJoiningServer()
+    {
+        HideAllPanels();
+        statusPanel.gameObject.SetActive(true);
     }
 }

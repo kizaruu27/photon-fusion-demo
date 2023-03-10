@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,11 @@ public class SessionListUIHandler : MonoBehaviour
     public TextMeshProUGUI statusText;
     public GameObject sessionItemListPrefab;
     public VerticalLayoutGroup verticalLayoutGroup;
+
+    private void Awake()
+    {
+        OnLookingForGameSession();
+    }
 
     public void ClearList()
     {
@@ -30,19 +36,27 @@ public class SessionListUIHandler : MonoBehaviour
         addedSessionInfoListUIItem.OnJoinSession += AddedSessionInfoListUIItem_OnJoinSession;
     }
 
-    void AddedSessionInfoListUIItem_OnJoinSession(SessionInfo obj)
+    void AddedSessionInfoListUIItem_OnJoinSession(SessionInfo sessionInfo)
     {
-        
+        BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
+        networkRunnerHandler.JoinGame(sessionInfo);
+
+        MainMenuHandler mainMenuHandler = FindObjectOfType<MainMenuHandler>();
+        mainMenuHandler.OnJoiningServer();
     }
 
     public void OnNoSessionFound()
     {
+        ClearList();
+        
         statusText.text = "No game session found";
         statusText.gameObject.SetActive(true);
     }
 
     public void OnLookingForGameSession()
     {
+        ClearList();
+        
         statusText.text = "Looking for game session...";
         statusText.gameObject.SetActive(true);
     }

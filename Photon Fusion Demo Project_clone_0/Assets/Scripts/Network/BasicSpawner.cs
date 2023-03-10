@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
+    private SessionListUIHandler sessionListUIHandler;
+    
     [SerializeField] private NetworkRunner networkRunner;
     [SerializeField] private NetworkPrefabRef playerPrefab;
 
@@ -26,6 +28,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         DontDestroyOnLoad(gameObject);
         
         NetworkRunner networkRunnerInScene = FindObjectOfType<NetworkRunner>();
+        sessionListUIHandler = FindObjectOfType<SessionListUIHandler>(true);
 
         if (networkRunner != null)
             networkRunner = networkRunnerInScene;
@@ -149,7 +152,26 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 
-    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+        if (sessionListUIHandler == null)
+            return;
+
+        if (sessionList.Count == 0)
+        {
+            Debug.Log("No Session Found");
+            sessionListUIHandler.OnNoSessionFound();
+        }
+        else
+        {
+            sessionListUIHandler.ClearList();
+            foreach (SessionInfo sessionInfo in sessionList)
+            {
+                sessionListUIHandler.AddToList(sessionInfo);
+                Debug.Log($"Found Session {sessionInfo.Name} player count: {sessionInfo.PlayerCount}");
+            }
+        }
+    }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
