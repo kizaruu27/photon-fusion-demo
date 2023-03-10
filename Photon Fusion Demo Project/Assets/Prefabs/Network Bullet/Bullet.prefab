@@ -96,7 +96,6 @@ GameObject:
   - component: {fileID: 6693149660136924782}
   - component: {fileID: 4480971584847991828}
   - component: {fileID: 5343763552628827918}
-  - component: {fileID: 2009739862316822936}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -203,16 +202,3 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
---- !u!135 &2009739862316822936
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6693149660136924770}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.15
-  m_Center: {x: 0, y: 0, z: 0}

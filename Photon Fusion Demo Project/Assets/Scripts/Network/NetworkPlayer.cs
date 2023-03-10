@@ -1,106 +1,93 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
-using TMPro;
 using Fusion;
-using Behaviour = Fusion.Behaviour;
+using TMPro;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
-    [SerializeField] private Transform cameraGroup;
-    [SerializeField] private Camera playerCamera;
-    [SerializeField] private CinemachineVirtualCamera cinemachineCam;
-    [SerializeField] private TextMeshProUGUI playerNicknameText;
-    [SerializeField] private GameObject localUI;
-
-    public LocalCamera localCamera;
-
-    [Networked(OnChanged = nameof(OnNicknameChanged))]
-    public NetworkString<_16> nickname { get; set; }
+    [SerializeField] private Transform playerCamera;
+    public TextMeshPro uName;
 
     public static NetworkPlayer Local { get; set; }
 
-    private bool isPublicJoinMessegeSent = false;
-    
-    //other components
-    private NetworkInGameMessege networkInGameMessege;
+    [Networked(OnChanged = nameof(SetUserName))]
+    public NetworkString<_16> userName { get; set; }
+    bool joinMessageSent = false;
+
+    [SerializeField] private MessageUI msgUI;
 
     private void Awake()
     {
         Local = this;
-        networkInGameMessege = GetComponent<NetworkInGameMessege>();
+        msgUI = GameObject.Find("Messages").GetComponent<MessageUI>();
     }
 
     public override void Spawned()
     {
+        RPC_SetUserName(PlayerPrefs.GetString("PlayerUserName"));
         if (!Object.HasInputAuthority)
         {
-            playerCamera.enabled = false;
-            cinemachineCam.enabled = false;
-            
-            // disable UI for remote player
-            localUI.SetActive(false);
+            playerCamera.gameObject.SetActive(false);
+            //GetComponent<PlayerController>().enabled = false;
+            //RPC_SetUserName(PlayerPrefs.GetString("PlayerUserName"));
+            //uName.text = userName.ToString();
         }
         else
         {
-            RPC_SetNickname(PlayerPrefs.GetString("PlayerNickname"));
+            RPC_SetUserName(PlayerPrefs.GetString("PlayerUserName"));
+            uName.text = userName.ToString();
 
-            cameraGroup.parent = null;
-
+            transform.GetChild(0).gameObject.SetActive(false);
+            playerCamera.parent = null;
+            
             Camera mainCamera = Camera.main;
             mainCamera.enabled = false;
 
             AudioListener audioListener = FindObjectOfType<AudioListener>();
             audioListener.enabled = false;
         }
-        
-        Runner.SetPlayerObject(Object.InputAuthority, Object);
     }
 
     public void PlayerLeft(PlayerRef player)
     {
-        if (Object.HasStateAuthority)
+        if(Object.HasStateAuthority)
         {
-            if (Object.HasStateAuthority)
+            if(Runner.TryGetPlayerObject(player, out NetworkObject playerLeftNetworkObject))
             {
-                if (Runner.TryGetPlayerObject(player, out NetworkObject playerLeftNetworkObject))
-                {
-                    if (playerLeftNetworkObject == Object)
-                        Local.GetComponent<NetworkInGameMessege>().SendInGameRPCMessege(playerLeftNetworkObject.GetComponent<NetworkPlayer>().nickname.ToString(), "left");
-                }
+                Local.msgUI.SendMessage(playerLeftNetworkObject.GetComponent<NetworkPlayer>().userName.ToString(), "left the session");
             }
         }
-        
-        // if (Object.InputAuthority)
-        //     Runner.Despawn(Object);
+        if(player == Object.InputAuthority)
+        {
+            Runner.Despawn(Object);
+        }
     }
 
-    void OnNicknameChanged()
+    private void SetUserName()
     {
-        Debug.Log($"Nickname changed for player to {nickname} for player {gameObject.name}");
-        playerNicknameText.text = nickname.ToString();
-    }
+        Debug.Log("Nickname Set for player " + gameObject.name);
 
-    static void OnNicknameChanged(Changed<NetworkPlayer> changed)
+        uName.text = userName.ToString();
+    }
+    static void SetUserName(Changed<NetworkPlayer> changed)
     {
-        Debug.Log($"{Time.time} On nickname changed value {changed.Behaviour.nickname}");
-        changed.Behaviour.OnNicknameChanged();
+        Debug.Log("On " + Time.time + " changed " + changed.Behaviour.userName);
+
+        changed.Behaviour.SetUserName();
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_SetNickname(string nickname, RpcInfo info = default)
+    public void RPC_SetUserName(string userName, RpcInfo info = default)
     {
-        Debug.Log($"[RPC] set nickname {nickname}");
-        this.nickname = nickname;
+        Debug.Log("[RPC] SetUserName " + userName);
+        this.userName = userName;
 
-        if (!isPublicJoinMessegeSent)
+        if(!joinMessageSent)
         {
-            networkInGameMessege.SendInGameRPCMessege(nickname, "joined");
-
-            isPublicJoinMessegeSent = true;
+            msgUI.SendMessage(userName.ToString(), " joined the session");
+            joinMessageSent = true;
         }
     }
-
 }
