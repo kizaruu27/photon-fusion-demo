@@ -873,7 +873,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PlayerName
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1270,6 +1270,7 @@ MonoBehaviour:
   cinemachineCam: {fileID: 1216187664}
   playerNicknameText: {fileID: 8749802862835526062}
   localUI: {fileID: 5376579989403020606}
+  playerData: {fileID: 11400000, guid: ded17944895d51842bb1f510e905f1fb, type: 2}
   localCamera: {fileID: 6525445615477061146}
   _nickname:
     _length: 0

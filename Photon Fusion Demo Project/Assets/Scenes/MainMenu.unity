@@ -1212,6 +1212,7 @@ MonoBehaviour:
   statusPanel: {fileID: 2438502}
   nicknameField: {fileID: 1163834198}
   sessionNameInputField: {fileID: 2028080953}
+  playerData: {fileID: 11400000, guid: ded17944895d51842bb1f510e905f1fb, type: 2}
 --- !u!4 &529371185
 Transform:
   m_ObjectHideFlags: 0

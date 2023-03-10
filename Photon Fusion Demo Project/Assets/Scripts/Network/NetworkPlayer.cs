@@ -5,7 +5,12 @@ using Cinemachine;
 using UnityEngine;
 using TMPro;
 using Fusion;
-using Behaviour = Fusion.Behaviour;
+
+[System.Serializable]
+public static class PlayerDataContainer
+{
+    public static string playerName;
+}
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
@@ -45,7 +50,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
         else
         {
-            RPC_SetNickname(PlayerPrefs.GetString("PlayerNickname"));
+            RPC_SetNickname(PlayerDataContainer.playerName);
 
             cameraGroup.parent = null;
 

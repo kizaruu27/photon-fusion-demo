@@ -40,7 +40,7 @@ public class SessionListUIHandler : MonoBehaviour
     {
         BasicSpawner networkRunnerHandler = FindObjectOfType<BasicSpawner>();
         networkRunnerHandler.JoinGame(sessionInfo);
-
+        
         MainMenuHandler mainMenuHandler = FindObjectOfType<MainMenuHandler>();
         mainMenuHandler.OnJoiningServer();
     }

@@ -18,7 +18,7 @@ public class MainMenuHandler : MonoBehaviour
     
     [Header("New Game Session")]
     public TMP_InputField sessionNameInputField;
-    
+
 
     private void Start()
     {
@@ -28,8 +28,10 @@ public class MainMenuHandler : MonoBehaviour
 
     public void OnFindGameClickede()
     {
-        PlayerPrefs.SetString("PlayerNickname", nicknameField.text);
-        PlayerPrefs.Save();
+        PlayerDataContainer.playerName = nicknameField.text;
+        
+        // PlayerPrefs.SetString("PlayerNickname", nicknameField.text);
+        // PlayerPrefs.Save();
 
         // SceneManager.LoadScene("Gameplay");
 
