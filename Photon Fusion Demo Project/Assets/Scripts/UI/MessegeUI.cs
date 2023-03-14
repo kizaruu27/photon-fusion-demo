@@ -4,7 +4,7 @@ using Fusion;
 using TMPro;
 using UnityEngine;
 
-public class MessegeUI : MonoBehaviour
+public class MessegeUI : NetworkBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] msgWindows;
     Queue msgQ = new Queue();

@@ -250,6 +250,7 @@ GameObject:
   - component: {fileID: 444221715}
   - component: {fileID: 444221714}
   - component: {fileID: 444221713}
+  - component: {fileID: 444221718}
   - component: {fileID: 444221717}
   m_Layer: 5
   m_Name: Local UI
@@ -352,10 +353,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 035e257ecb328bd4fb248a7a228c7cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   msgWindows:
   - {fileID: 1960500854}
   - {fileID: 452765690}
   - {fileID: 823917162}
+--- !u!114 &444221718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444221711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: d6133a3a83b540e0a27c2fec71292698
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 444221717}
+  SimulationBehaviours: []
 --- !u!1 &452765687
 GameObject:
   m_ObjectHideFlags: 0
