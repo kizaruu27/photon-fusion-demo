@@ -1273,7 +1273,7 @@ MonoBehaviour:
   playerCamera: {fileID: 330585545}
   cinemachineCam: {fileID: 1216187664}
   playerNicknameText: {fileID: 8749802862835526062}
-  localUI: {fileID: 5376579989403020606}
+  localUI: {fileID: 0}
   localCamera: {fileID: 6525445615477061146}
   _nickname:
     _length: 0
@@ -1322,7 +1322,7 @@ MonoBehaviour:
     _inverse: 0
     _hash: -814817977
   StateHashes: 000000008b7cfd670f5f2b882b1a167c794069550dda2c773e690940
-  TriggerHashes: 00000000
+  TriggerHashes: 0000000028a98107
 --- !u!1 &3495730728390630497
 GameObject:
   m_ObjectHideFlags: 0

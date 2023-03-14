@@ -18,7 +18,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [SerializeField] private Camera playerCamera;
     [SerializeField] private CinemachineVirtualCamera cinemachineCam;
     [SerializeField] private TextMeshProUGUI playerNicknameText;
-    [SerializeField] private GameObject localUI;
+    [SerializeField] private MessegeUI localUI;
 
     public LocalCamera localCamera;
 
@@ -36,6 +36,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Local = this;
         networkInGameMessege = GetComponent<NetworkInGameMessege>();
+        localUI = GameObject.Find("Local UI").GetComponent<MessegeUI>();
     }
 
     public override void Spawned()
@@ -45,8 +46,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             playerCamera.enabled = false;
             cinemachineCam.enabled = false;
             
-            // disable UI for remote player
-            localUI.SetActive(false);
+            AudioListener audioListener = FindObjectOfType<AudioListener>();
+            audioListener.enabled = false;
         }
         else
         {
@@ -56,9 +57,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Camera mainCamera = Camera.main;
             mainCamera.enabled = false;
-
-            AudioListener audioListener = FindObjectOfType<AudioListener>();
-            audioListener.enabled = false;
         }
         
         Runner.SetPlayerObject(Object.InputAuthority, Object);
@@ -73,7 +71,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
                 if (Runner.TryGetPlayerObject(player, out NetworkObject playerLeftNetworkObject))
                 {
                     if (playerLeftNetworkObject == Object)
-                        Local.GetComponent<NetworkInGameMessege>().SendInGameRPCMessege(playerLeftNetworkObject.GetComponent<NetworkPlayer>().nickname.ToString(), "left");
+                        Local.localUI.SendMessage(playerLeftNetworkObject.GetComponent<NetworkPlayer>().nickname.ToString(), " left the session");
                 }
             }
         }
@@ -102,7 +100,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
         if (!isPublicJoinMessegeSent)
         {
-            networkInGameMessege.SendInGameRPCMessege(nickname, "joined");
+            Local.localUI.SendMessage(nickname.ToString(), " joined the session");
 
             isPublicJoinMessegeSent = true;
         }
