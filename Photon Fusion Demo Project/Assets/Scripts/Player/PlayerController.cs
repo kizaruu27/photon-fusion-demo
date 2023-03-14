@@ -9,6 +9,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private NetworkCharacterControllerPrototype networkCharacterController;
     [SerializeField] private float speed = 15f;
+    [SerializeField] private Animator anim;
 
     [SerializeField] private MeshRenderer meshRenderer;
     
@@ -45,14 +46,25 @@ public class PlayerController : NetworkBehaviour
             // move
             Vector3 moveVector = data.movementInput.normalized;
             networkCharacterController.Move(moveVector * speed * Runner.DeltaTime);
+
+            bool isWalking = moveVector.magnitude != 0;
+            anim.SetBool("isWalking", isWalking);
             
-            // jump
+            // if (moveVector.magnitude != 0)
+            //     anim.SetBool("isWalking", true);
+            // else
+            //     anim.SetBool("isWalking", false);
+
+                // jump
             NetworkButtons buttons = data.buttons;
             var pressed = buttons.GetPressed(ButtonsPrevious);
             ButtonsPrevious = buttons;
             
             if (pressed.IsSet(InputButtons.JUMP))
                 networkCharacterController.Jump();
+            
+            // animation
+            
             
             // fire
             if (pressed.IsSet(InputButtons.FIRE))
@@ -62,6 +74,11 @@ public class PlayerController : NetworkBehaviour
             // check if hp is below 0
             if (Hp <= 0 || networkCharacterController.transform.position.y <= -5)
                 Respawn();
+        }
+        else
+        {
+            // anim.Play("Idle");
+
         }
     }
 
