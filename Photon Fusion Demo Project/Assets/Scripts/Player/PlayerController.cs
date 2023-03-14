@@ -47,24 +47,31 @@ public class PlayerController : NetworkBehaviour
             Vector3 moveVector = data.movementInput.normalized;
             networkCharacterController.Move(moveVector * speed * Runner.DeltaTime);
 
+            // animation
             bool isWalking = moveVector.magnitude != 0;
-            anim.SetBool("isWalking", isWalking);
-            
+            bool isGround = networkCharacterController.IsGrounded;
+            anim.SetBool("isWalking", isWalking && isGround);
+
+            if (isGround)
+            {
+                // anim.SetBool("isWalking", false);
+            }
+
             // if (moveVector.magnitude != 0)
             //     anim.SetBool("isWalking", true);
             // else
             //     anim.SetBool("isWalking", false);
 
-                // jump
+            // jump
             NetworkButtons buttons = data.buttons;
             var pressed = buttons.GetPressed(ButtonsPrevious);
             ButtonsPrevious = buttons;
-            
+
             if (pressed.IsSet(InputButtons.JUMP))
+            {
                 networkCharacterController.Jump();
-            
-            // animation
-            
+                anim.Play("Jumping Up");
+            }
             
             // fire
             if (pressed.IsSet(InputButtons.FIRE))
