@@ -25,6 +25,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Networked(OnChanged = nameof(OnNicknameChanged))]
     public NetworkString<_16> nickname { get; set; }
 
+    [Networked]public int token { get; set; }
+
     public static NetworkPlayer Local { get; set; }
 
     private bool isPublicJoinMessegeSent = false;
@@ -105,4 +107,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
     }
 
+    public static implicit operator NetworkPlayer(NetworkObject v)
+    {
+        throw new NotImplementedException();
+    }
 }
