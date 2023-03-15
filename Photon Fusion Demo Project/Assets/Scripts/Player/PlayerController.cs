@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Fusion;
+using System;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -92,5 +93,15 @@ public class PlayerController : NetworkBehaviour
     void ChangeColor_RPC(Color newColor)
     {
         meshRenderer.material.color = newColor;
+    }
+
+    internal Vector3? ReadPosition()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal Quaternion? ReadRotation()
+    {
+        throw new NotImplementedException();
     }
 }
