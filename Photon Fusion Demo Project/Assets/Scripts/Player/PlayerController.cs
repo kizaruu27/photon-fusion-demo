@@ -67,16 +67,16 @@ public class PlayerController : NetworkBehaviour
             var pressed = buttons.GetPressed(ButtonsPrevious);
             ButtonsPrevious = buttons;
 
-            if (pressed.IsSet(InputButtons.JUMP))
-            {
-                networkCharacterController.Jump();
-                anim.Play("Jumping Up");
-            }
+            // if (pressed.IsSet(InputButtons.JUMP))
+            // {
+            //     networkCharacterController.Jump();
+            //     anim.Play("Jumping Up");
+            // }
             
             // fire
-            if (pressed.IsSet(InputButtons.FIRE))
-                Runner.Spawn(bulletPrefab, transform.position + transform.TransformDirection(Vector3.forward),
-                    Quaternion.LookRotation(transform.TransformDirection(Vector3.forward)), Object.InputAuthority);
+            // if (pressed.IsSet(InputButtons.FIRE))
+            //     Runner.Spawn(bulletPrefab, transform.position + transform.TransformDirection(Vector3.forward),
+            //         Quaternion.LookRotation(transform.TransformDirection(Vector3.forward)), Object.InputAuthority);
             
             // check if hp is below 0
             if (Hp <= 0 || networkCharacterController.transform.position.y <= -5)
