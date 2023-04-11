@@ -7,10 +7,11 @@ using UnityEngine.AI;
 public class WalkingNPC : NetworkBehaviour
 {
     public ObstacleAvoidanceType obstacleAvoidanceType;
+    public bool isTeleport;
     
     public List<Transform> wayPoints;
     [SerializeField] private NavMeshAgent navMeshAgent;
-    // [SerializeField] private Animator anim;
+    [SerializeField] private Animator anim;
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float turnSpeed = .5f;
     [SerializeField] private float stoppingDistance = .5f;
@@ -34,6 +35,9 @@ public class WalkingNPC : NetworkBehaviour
         float singleStep = turnSpeed * Time.deltaTime;
         Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0f);
         transform.rotation = Quaternion.LookRotation(newDirection);
+        
+        if (isTeleport)
+            Invoke("ResetTeleportState", 3);
     }
 
     void GoToNextWayPoint()
@@ -44,6 +48,11 @@ public class WalkingNPC : NetworkBehaviour
         navMeshAgent.stoppingDistance = stoppingDistance;
         navMeshAgent.SetDestination(wayPoints[currentWayPoint].position);
         currentWayPoint = (currentWayPoint + 1) % wayPoints.Count;
-        // anim.SetBool("isWalking", true);
+        anim.SetBool("IsWalking", true);
+    }
+    
+    void ResetTeleportState()
+    {
+        isTeleport = false;
     }
 }
