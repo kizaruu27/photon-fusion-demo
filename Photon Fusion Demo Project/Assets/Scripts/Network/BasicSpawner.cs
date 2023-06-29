@@ -163,7 +163,21 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        
+        var data = new NetworkInputData();
+
+        //move input
+        float xinput = Input.GetAxis("Horizontal");
+        float zinput = Input.GetAxis("Vertical");
+        data.movementInput = new Vector2(xinput, zinput);
+
+        //jump input
+        data.buttons.Set(InputButtons.JUMP, Input.GetKey(KeyCode.Space));
+
+        //fire input
+        data.buttons.Set(InputButtons.FIRE, Input.GetKey(KeyCode.Mouse0));
+
+        //set input data to network
+        input.Set(data);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
