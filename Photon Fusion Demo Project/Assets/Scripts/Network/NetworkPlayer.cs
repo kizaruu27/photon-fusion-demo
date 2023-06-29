@@ -32,7 +32,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     private void Awake()
     {
         Local = this;
-        localUI = GameObject.Find("UI Canvas").GetComponent<MessageUI>();
+        //localUI = GameObject.Find("UI Canvas").GetComponent<MessageUI>();
     }
 
     public override void Spawned()
@@ -46,7 +46,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             audioListener.enabled = false;
 
             // disable UI for remote player
-            //localUI.SetActive(false);
+            localUI.gameObject.SetActive(false);
         }
         else
         {

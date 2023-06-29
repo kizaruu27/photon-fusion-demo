@@ -5,13 +5,15 @@ using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private SessionListUIHandler sessionListUIHandler;
-    
+
     [SerializeField] private NetworkRunner networkRunner;
     [SerializeField] private NetworkPrefabRef playerPrefab;
+    [SerializeField] private static byte[] connectionToken;
 
     private Dictionary<PlayerRef, NetworkObject> playerList = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -26,7 +28,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        
+
         NetworkRunner networkRunnerInScene = FindObjectOfType<NetworkRunner>();
         sessionListUIHandler = FindObjectOfType<SessionListUIHandler>(true);
 
@@ -38,16 +40,26 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (SceneManager.GetActiveScene().name != "MainMenu")
         {
+            if(connectionToken == null)
+            {
+                connectionToken = Guid.NewGuid().ToByteArray();
+            }
             switch (mode)
             {
-                case MatchmakingMode.AutoHostOrClient :
+                case MatchmakingMode.AutoHostOrClient:
                     StartGame(GameMode.AutoHostOrClient, "Test Session", SceneManager.GetActiveScene().buildIndex);
                     break;
-                case MatchmakingMode.Shared :
+                case MatchmakingMode.Shared:
                     StartGame(GameMode.Shared, "Test Session", SceneManager.GetActiveScene().buildIndex);
                     break;
             }
         }
+    }
+
+    public void StartHostMigration(HostMigrationToken hostMigrationToken)
+    {
+        var clientTask = StartMigratedGame(networkRunner, hostMigrationToken);
+        Debug.Log("Migrating Host");
     }
 
     async void StartGame(GameMode mode, string sessionName, int scene)
@@ -60,15 +72,44 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = sessionName,
             CustomLobbyName = "OurLobbyID",
             Scene = scene,
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            ConnectionToken = connectionToken
         });
         
-        Debug.Log("Network Successfull");
+        Debug.Log("Network Connection Successful");
         
         if (mode == GameMode.AutoHostOrClient)
             Debug.Log("Auto Host");
         else if (mode == GameMode.Shared)
             Debug.Log("Shared Mode");
+    }
+
+    async Task StartMigratedGame(NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    {
+        runner.ProvideInput = true;
+
+        await runner.StartGame(new StartGameArgs()
+        {
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            HostMigrationToken = hostMigrationToken,
+            HostMigrationResume = HostMigrationResume
+        });
+    }
+
+    void HostMigrationResume(NetworkRunner runner)
+    {
+        Debug.Log("Resuming Session");
+
+        foreach (var resumeNetworkObject in runner.GetResumeSnapshotNetworkObjects())
+        {
+            if(resumeNetworkObject.TryGetBehaviour<PlayerController>(out var playerController))
+            {
+                runner.Spawn(resumeNetworkObject, position: playerController.networkCharacterController.ReadPosition(), rotation: playerController.networkCharacterController.ReadRotation(), onBeforeSpawned: (runner, newNO) =>
+                {
+                    newNO.CopyStateFrom(resumeNetworkObject);
+                });
+            }
+        }
     }
 
     async void JoinLobby()
@@ -107,6 +148,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         Vector3 spawnPosition = Vector3.up * 2;
         NetworkObject networkPlayerObject = runner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, player);
+        networkPlayerObject.name = PlayerDataContainer.playerName;
         playerList.Add(player, networkPlayerObject);
     }
 
@@ -121,21 +163,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        var data = new NetworkInputData();
         
-        // move input
-        float xInput = Input.GetAxis("Horizontal");
-        float zInput = Input.GetAxis("Vertical");
-        data.movementInput = new Vector3(xInput, 0, zInput);
-        
-        // jump input
-        data.buttons.Set(InputButtons.JUMP, Input.GetKey(KeyCode.Space));
-        
-        // fire input
-        data.buttons.Set(InputButtons.FIRE, Input.GetKey(KeyCode.Mouse0));
-        
-        // set the input data to network
-        input.Set(data);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
@@ -175,7 +203,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    {
+        await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
+        StartHostMigration(hostMigrationToken);
+    }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
 

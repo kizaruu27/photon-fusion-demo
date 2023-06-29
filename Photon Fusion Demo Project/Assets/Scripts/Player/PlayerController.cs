@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using Fusion;
+using TMPro;
 
 public class PlayerController : NetworkBehaviour
 {
     [SerializeField] private Bullet bulletPrefab;
-    [SerializeField] private NetworkCharacterControllerPrototype networkCharacterController;
+    [SerializeField] public NetworkCharacterControllerPrototype networkCharacterController;
     [SerializeField] private float speed = 15f;
+    [SerializeField] public bool isChatting = false;
 
     [SerializeField] private MeshRenderer meshRenderer;
     
@@ -19,20 +22,19 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private Image hpBar;
 
-
     [Networked] public NetworkButtons ButtonsPrevious { get; set; }
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z) && !isChatting)
         {
             ChangeColor_RPC(Color.red);
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && !isChatting)
         {
             ChangeColor_RPC(Color.blue);
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !isChatting)
         {
             ChangeColor_RPC(Color.yellow);
         }
@@ -40,7 +42,7 @@ public class PlayerController : NetworkBehaviour
     
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData data))
+        if (GetInput(out NetworkInputData data) && !isChatting)
         {
             // move
             Vector3 moveVector = data.movementInput.normalized;

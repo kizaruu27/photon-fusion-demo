@@ -26,6 +26,25 @@ public class MainMenuHandler : MonoBehaviour
         //     nicknameField.text = PlayerPrefs.GetString("PlayerNickname");
     }
 
+    private void Update()
+    {
+        if(playerDetailsPanel.activeSelf)
+        {
+            if(nicknameField.text != "" && nicknameField.text.Length >0 && Input.GetKeyDown(KeyCode.Return))
+            {
+                OnFindGameClickede();
+            }
+        }
+
+        if(createSessionPanel.activeSelf)
+        {
+            if (sessionNameInputField.text != "" && sessionNameInputField.text.Length > 0 && Input.GetKeyDown(KeyCode.Return))
+            {
+                OnStartNewSessionClicked();
+            }
+        }
+    }
+
     public void OnFindGameClickede()
     {
         PlayerDataContainer.playerName = nicknameField.text;

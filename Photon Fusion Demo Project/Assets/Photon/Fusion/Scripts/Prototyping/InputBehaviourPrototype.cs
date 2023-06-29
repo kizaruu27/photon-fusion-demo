@@ -8,7 +8,7 @@ using UnityEngine;
 /// A simple example of Fusion input collection. This component should be on the same GameObject as the <see cref="NetworkRunner"/>.
 /// </summary>
 [ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
-public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks {
+public class InputBehaviourPrototype : Fusion.Behaviour{
 
   public void OnInput(NetworkRunner runner, NetworkInput input) {
     var frameworkInput = new NetworkInputPrototype();
@@ -88,7 +88,7 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
   public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) {
   }
 
-  public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) {
+  public void OnHostMigrationAsync(NetworkRunner runner, HostMigrationToken hostMigrationToken) {
 
   }
 }
